@@ -22,7 +22,7 @@ export default function () {
 
         <AppBar position={"static"} className={classes.root}>
             <Container>
-                <Toolbar>
+                <Toolbar variant={"dense"}>
                     <Button disableRipple={true} component={Link} to={"/"}>Users</Button>
                     <Button disableRipple={true} component={Link} to={"/courses"}>Courses</Button>
                 </Toolbar>

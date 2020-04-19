@@ -10,16 +10,20 @@ db = Database()
 def users(user_id=None):
     if user_id:
         if request.method == 'GET':
-            # return user by id
-            db_data = db.get_user(user_id)
-            if not db_data:
+            # return user by id + user courses
+            user_data = db.get_user(user_id)
+            if not user_data:
                 return jsonify({'message': 'user not found'}), 404
-            user = {'id': db_data[0],
-                    'name': db_data[1],
-                    'email': db_data[2],
-                    'status': db_data[3],
-                    'phone': db_data[4],
-                    'mobile': db_data[5]}
+
+            user_courses_data = db.get_user_courses(user_id)
+            user_courses = [{'id': c_id, 'name': c_name, 'code': c_code} for c_id, c_name, c_code, in user_courses_data]
+            user = {'id': user_data[0],
+                    'name': user_data[1],
+                    'email': user_data[2],
+                    'status': user_data[3],
+                    'phone': user_data[4],
+                    'mobile': user_data[5],
+                    'courses': user_courses}
             return jsonify(user)
 
         if request.method == 'DELETE':
@@ -60,21 +64,7 @@ def users(user_id=None):
 
 
 @app.route('/api/courses', methods=['GET'])
-@app.route('/api/courses/<int:user_id>', methods=['GET'])
-def courses(user_id=None):
-    if user_id is None:
-        # return all courses
-        all_courses = [{'id': c_id,
-                        'name': c_name,
-                        'code': c_code,
-                        }
-                       for c_id, c_name, c_code, in db.get_courses()]
-        return jsonify(all_courses)
-    else:
-        # return user courses
-        user_courses = [{'id': c_id,
-                         'name': c_name,
-                         'code': c_code,
-                         }
-                        for c_id, c_name, c_code, in db.get_user_courses(user_id)]
-        return jsonify(user_courses)
+def courses():
+    # return all courses
+    all_courses = [{'id': c_id, 'name': c_name, 'code': c_code} for c_id, c_name, c_code, in db.get_courses()]
+    return jsonify(all_courses)

@@ -7,44 +7,44 @@ class UserStore {
 
     userList = [];
     courses = [];
+    userToEdit = null;
 
     createUser = (userData) => {
-        fetch("http://127.0.0.1:5000/api/users", {
+        return fetch("http://10.10.86.217:5000/api/users", {
             method: "POST",
             headers: {'Content-Type': "application/json"},
             body: JSON.stringify(userData)
-        })
-            .then(response => response.json())
-            .then(json => console.log(json))
-            .then(()=>this.getUsers());
+        }).then(response => response.status === 201);
     };
 
     getUser = (userId) => {
-        fetch("http://127.0.0.1:5000/api/users/" + userId)
+        fetch("http://10.10.86.217:5000/api/users/" + userId)
             .then(response => response.json())
-            .then(json => console.log(json))
+            .then(user => this.userToEdit = user)
     };
 
-    updateUser = (userId) => {
-        fetch("http://localhost:5000/api/users/" + userId)
-            .then(response => response.json())
-            .then(json => this.userList = json)
+    updateUser = (user) => {
+        return fetch("http://10.10.86.217:5000/api/users/" + user.id,
+            {
+                method: "PUT",
+                headers: {'Content-Type': "application/json"},
+                body: JSON.stringify(user)
+            }).then(response => response.status === 200);
     };
 
     deleteUser = (userId) => {
-        fetch("http://localhost:5000/api/users/" + userId, {method: "DELETE"})
-            .then(()=>this.getUsers())
+        fetch("http://10.10.86.217:5000/api/users/" + userId, {method: "DELETE"})
+            .then(() => this.getUsers())
     };
 
-
     getCourses = () => {
-        fetch("http://localhost:5000/api/courses")
+        fetch("http://10.10.86.217:5000/api/courses")
             .then(response => response.json())
             .then(json => this.courses = json)
     };
 
     getUsers = () => {
-        fetch("http://localhost:5000/api/users")
+        fetch("http://10.10.86.217:5000/api/users")
             .then(response => response.json())
             .then(json => this.userList = json)
     };
@@ -54,6 +54,7 @@ class UserStore {
 decorate(UserStore, {
         userList: observable,
         courses: observable,
+        userToEdit: observable,
 
         getCourses: action,
         getUsers: action,

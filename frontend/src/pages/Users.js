@@ -4,10 +4,18 @@ import UsersTable from "../components/UsersTable";
 import {Button, Fab, Typography, withStyles} from '@material-ui/core'
 import {Link} from "react-router-dom";
 import AddIcon from '@material-ui/icons/Add';
+import TextField from "@material-ui/core/TextField";
+import SearchIcon from '@material-ui/icons/Search';
 
 const styles = theme => ({
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(3),
+        // display: "flex",
+        // flexDirection: "row",
+        // alignItems: "center",
+        // "& h1": {
+        //     color: "#2f303f"
+        // }
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -22,8 +30,8 @@ class Users extends React.Component {
     }
 
     render() {
+        const {classes} = this.props;
         const users = this.props.stores.users;
-        const { classes } = this.props;
 
         return (
             <div className={classes.paper}>
@@ -33,7 +41,7 @@ class Users extends React.Component {
                     USERS
                 </Typography>
                 <UsersTable
-                    users={users.userList}
+                    users={this.props.stores.users.userList}
                     onDeleteClick={users.deleteUser}
                 />
             </div>

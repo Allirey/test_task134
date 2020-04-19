@@ -1,18 +1,10 @@
 import React, {useState} from 'react';
 import {
-    Button,
-    TextField,
-    FormControl,
-    FormControlLabel,
-    InputLabel,
-    Grid,
-    Link,
-    Typography,
-    Container,
-    makeStyles,
-    CssBaseline,
-    Select, MenuItem
+    Button, TextField, Grid, Typography, Container, makeStyles, CssBaseline, MenuItem, Fab, Snackbar
 } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert'
+import {Link} from 'react-router-dom';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -32,34 +24,96 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 export default function (props) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [mobile, setMobile] = useState('');
     const [status, setStatus] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [nameErrorText, setNameErrorText] = useState('');
+    const [emailErrorText, setEmailErrorText] = useState('');
+    const [phoneErrorText, setPhoneErrorText] = useState('');
+    const [mobileErrorText, setMobileErrorText] = useState('');
 
     const classes = useStyles();
 
-    const handleSubmit=(event)=>{
+
+    const handleClick = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') return;
+        setOpen(false);
+    };
+
+    const isNameValid = () => {
+        let isValid = /^[a-zA-Z]{4,20}$/.test(name);
+        setNameErrorText(isValid ? '' : name.length ? 'Please enter a valid name. 4-20 latin letters' : 'This field is required');
+        return isValid;
+    };
+
+    const isEmailValid = () => {
+        let isValid = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email);
+        setEmailErrorText(isValid ? '' : email.length ? 'Please enter a valid email address.' : 'This field is required');
+        return isValid;
+    };
+
+    const isPhoneValid =()=>{
+        let isValid = phone.length === 0 || /^\++[0-9]{10,15}$/.test(phone);
+        setPhoneErrorText(isValid? '': 'Please enter a valid phone number (e.g. +380123456789), or leave empty');
+        return isValid;
+    };
+
+    const isMobileValid = () => {
+        let isValid = mobile.length === 0 || /^\++[0-9]{10,15}$/.test(mobile);
+        setMobileErrorText(isValid? '': 'Please enter a valid mobile number (e.g. +380123456789), or leave empty');
+        return isValid;
+    };
+
+    const handleSubmit = (event) => {
         event.preventDefault();
+        if (!isNameValid() | !isEmailValid() | !isPhoneValid() | !isMobileValid()) return;
+
         props.onSubmit({
-            name:name,
-            email:email,
-            status:status,
-            phone:phone,
-            mobile:mobile
+            name: name,
+            email: email,
+            status: status,
+            phone: phone,
+            mobile: mobile
+        }).then(success=>{
+            if(success){
+                setOpen(true);
+                props.redirectOnSubmit();
+            }
+            else{
+                //todo server failure message.
+            }
         });
     };
 
     return (
         <Container component="main" maxWidth="xs">
+            <Fab size={"small"} component={Link} to={"/"} color={"secondary"}><ChevronLeftIcon/></Fab>
             <CssBaseline/>
             <div className={classes.paper}>
+                <Snackbar
+                    anchorOrigin={{vertical: 'top', horizontal: "center"}}
+                    autoHideDuration={3000}
+                    open={open}
+                    onClose={handleClose}
+                >
+                    <Alert onClose={handleClose}>User created successfully</Alert>
+                </Snackbar>
                 <Typography component="h1" variant="h4">
                     CREATE USER
                 </Typography>
-                <form className={classes.form} autoComplete={"off"} onSubmit={handleSubmit}>
+                <form className={classes.form} autoComplete={"off"} onSubmit={handleSubmit} noValidate>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
@@ -72,6 +126,8 @@ export default function (props) {
                                 value={name}
                                 onChange={event => setName(event.target.value)}
                                 autoFocus
+                                error={!!nameErrorText}
+                                helperText={nameErrorText}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -84,6 +140,8 @@ export default function (props) {
                                 name="email"
                                 value={email}
                                 onChange={event => setEmail(event.target.value)}
+                                error={!!emailErrorText}
+                                helperText={emailErrorText}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -95,6 +153,8 @@ export default function (props) {
                                 name="phone"
                                 value={phone}
                                 onChange={event => setPhone(event.target.value)}
+                                error={!!phoneErrorText}
+                                helperText={phoneErrorText}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -106,6 +166,8 @@ export default function (props) {
                                 name="mobile"
                                 value={mobile}
                                 onChange={event => setMobile(event.target.value)}
+                                error={!!mobileErrorText}
+                                helperText={mobileErrorText}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -126,6 +188,7 @@ export default function (props) {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
+                        disabled={open}
                     >
                         Create
                     </Button>

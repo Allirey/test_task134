@@ -6,7 +6,10 @@ class UserCreate extends React.Component{
     render(){
         return (
             <div>
-                <UserCreateForm onSubmit={this.props.stores.users.createUser}/>
+                <UserCreateForm
+                    onSubmit={this.props.stores.users.createUser}
+                    redirectOnSubmit={()=> setTimeout(()=>{this.props.history.push("/")}, 3100)}
+                />
             </div>
         )
     }

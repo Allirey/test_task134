@@ -84,11 +84,11 @@ END $$
 -- Select user courses
 CREATE PROCEDURE get_user_courses(u_id INTEGER)
 BEGIN
-    SELECT *
-    FROM users_courses,
-         courses
-    WHERE users_courses.user_id = u_id
-      AND users_courses.course_id = courses.id;
+    SELECT courses.id, courses.name, courses.code
+    FROM courses
+    INNER JOIN users_courses ON users_courses.course_id = courses.id
+    INNER JOIN users ON users_courses.user_id = users.id
+    WHERE users_courses.user_id = u_id;
 END $$
 
 -- Delete user courses
