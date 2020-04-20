@@ -1,19 +1,11 @@
 import React, {useState} from 'react';
 import {
-    Button, TextField, Grid, Typography, Container, makeStyles, CssBaseline, MenuItem, Fab, Chip, Snackbar
+    Button, TextField, Grid, Container, makeStyles, CssBaseline, MenuItem, Fab, Chip, Snackbar
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import MuiAlert from "@material-ui/lab/Alert";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(3),
@@ -118,9 +110,8 @@ export default function UserEditForm(props) {
 
     return (
         <Container component="main" maxWidth="xs">
-            <Fab size={"small"} component={Link} to={"/"} color={"secondary"}><ChevronLeftIcon/></Fab>
             <CssBaseline/>
-            <div className={classes.paper}>
+            <div>
                 <Snackbar
                     anchorOrigin={{vertical: 'top', horizontal: "center"}}
                     autoHideDuration={3000}
@@ -129,9 +120,6 @@ export default function UserEditForm(props) {
                 >
                     <Alert onClose={handleClose}>Changes saved successfully</Alert>
                 </Snackbar>
-                <Typography component="h1" variant="h4">
-                    CHANGE USER
-                </Typography>
                 <form className={classes.form} autoComplete={"off"} onSubmit={handleSubmit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>

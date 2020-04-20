@@ -1,18 +1,10 @@
 import React, {useState} from 'react';
 import {
-    Button, TextField, Grid, Typography, Container, makeStyles, CssBaseline, MenuItem, Fab, Snackbar
+    Button, TextField, Grid, Typography, Container, makeStyles, CssBaseline, MenuItem, Snackbar
 } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert'
-import {Link} from 'react-router-dom';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 const useStyles = makeStyles((theme) => ({
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(3),
@@ -94,9 +86,8 @@ export default function (props) {
 
     return (
         <Container component="main" maxWidth="xs">
-            <Fab size={"small"} component={Link} to={"/"} color={"secondary"}><ChevronLeftIcon/></Fab>
             <CssBaseline/>
-            <div className={classes.paper}>
+            <div>
                 <Snackbar
                     anchorOrigin={{vertical: 'top', horizontal: "center"}}
                     autoHideDuration={3000}
@@ -105,9 +96,6 @@ export default function (props) {
                 >
                     <Alert onClose={handleClose}>User created successfully</Alert>
                 </Snackbar>
-                <Typography component="h1" variant="h4">
-                    CREATE USER
-                </Typography>
                 <form className={classes.form} autoComplete={"off"} onSubmit={handleSubmit} noValidate>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>

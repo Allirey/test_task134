@@ -1,7 +1,7 @@
 import React, {memo} from "react";
 import PropTypes from 'prop-types';
 import {
-    Table, TableBody, TableHead, TableRow, TableContainer, TableCell, Fab, Paper, makeStyles, TextField, IconButton,
+    Table, TableBody, TableHead, TableRow, TableContainer, TableCell, Fab, Paper, makeStyles, IconButton,
     TableFooter, useTheme
 } from "@material-ui/core";
 import {Link} from "react-router-dom";
@@ -12,7 +12,6 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -120,30 +119,18 @@ function UserTable(props) {
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [searchFilter, setSearchFilter] = React.useState('');
-    const [searchInput, setSearchInput] = React.useState('');
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+    const handleChangePage = (event, newPage) => setPage(newPage);
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
 
-    const onSubmitSearch = () => setSearchFilter(searchInput);
-
-    const users = props.users.filter(obj => obj.name.toLowerCase().includes(searchFilter.toLowerCase()));
+    const users = props.users.filter(obj => obj.name.toLowerCase().includes(props.searchFilter.toLowerCase()));
 
     return (
         <TableContainer component={Paper} className={classes.table}>
-            <TextField
-                label={"search"}
-                onChange={event => setSearchInput(event.target.value)}
-                onKeyDown={(e) => e.keyCode === 13 ? onSubmitSearch() : []}
-            />
-            <Fab size={"small"} onClick={onSubmitSearch}><SearchIcon/></Fab>
             <Table size={"small"}>
                 <TableHead>
                     <TableRow>
