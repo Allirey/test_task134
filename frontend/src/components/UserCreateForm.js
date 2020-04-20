@@ -42,11 +42,6 @@ export default function (props) {
 
     const classes = useStyles();
 
-
-    const handleClick = () => {
-        setOpen(true);
-    };
-
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') return;
         setOpen(false);

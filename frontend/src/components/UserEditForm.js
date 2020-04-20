@@ -53,7 +53,6 @@ export default function UserEditForm(props) {
 
     const classes = useStyles();
     const [showMessage, setShowMessage] = React.useState(false);
-    const handleClick = () => setShowMessage(true);
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') return;
         setShowMessage(false);
