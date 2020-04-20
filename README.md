@@ -1,4 +1,4 @@
-# Test task junior full-stack
+# Test task python full-stack
 
 ### how to use:
 
@@ -8,7 +8,7 @@ $ cd test_task134/
 
 ###### create necessary DB and tables:
 
-$ sudo mysql -u [your_user or just 'root'] -p < [path/to/init_db.sql]
+$ sudo mysql -u [your_user or just 'root'] -p < init_db.sql
 
 ###### create virtual environment: 
 $ python3 -m venv venv \
