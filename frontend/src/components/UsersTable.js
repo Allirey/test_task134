@@ -46,6 +46,15 @@ const useStyles = makeStyles(theme => ({
         "& .MuiSvgIcon-root": {
             width: 20,
             height: 20
+        },
+        "& td > a.MuiFab-root": {
+            backgroundColor: "#5db273",
+            color: "white"
+        },
+
+        "& td > button.MuiFab-root": {
+            backgroundColor: "#f24c3d",
+            color: "white"
         }
     },
 }));
@@ -123,9 +132,7 @@ function UserTable(props) {
         setPage(0);
     };
 
-    const onSubmitSearch = () => {
-        setSearchFilter(searchInput);
-    };
+    const onSubmitSearch = () => setSearchFilter(searchInput);
 
     const users = props.users.filter(obj => obj.name.toLowerCase().includes(searchFilter.toLowerCase()));
 
@@ -160,9 +167,8 @@ function UserTable(props) {
                                 </span>
                             </TableCell>
                             <TableCell>
-                                <Fab style={{backgroundColor: "green", color: "white"}} component={Link}
-                                     to={"/users/edit/" + row.id}><EditIcon/></Fab>
-                                <Fab color={"secondary"} onClick={() => props.onDeleteClick(row.id)}>
+                                <Fab component={Link} to={"/users/edit/" + row.id}><EditIcon/></Fab>
+                                <Fab onClick={() => props.onDeleteClick(row.id)}>
                                     <DeleteForeverIcon/>
                                 </Fab>
                             </TableCell>

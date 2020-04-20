@@ -94,7 +94,7 @@ END $$
 -- Delete user courses
 CREATE PROCEDURE delete_user_courses(u_id INTEGER)
 BEGIN
-    DELETE FROM users_courses WHERE users_courses.id = u_id;
+    DELETE FROM users_courses WHERE users_courses.user_id = u_id;
 END $$
 
 -- Add user course

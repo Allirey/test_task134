@@ -42,32 +42,39 @@ export default function UserEditForm(props) {
     const [phone, setPhone] = useState(user.phone);
     const [mobile, setMobile] = useState(user.mobile);
     const [status, setStatus] = useState(user.status);
-    const [courses, setCourses] = useState(user.courses);
+    const [userCourses, setUserCourses] = useState(user.courses);
 
     const [emailErrorText, setEmailErrorText] = useState('');
     const [phoneErrorText, setPhoneErrorText] = useState('');
     const [mobileErrorText, setMobileErrorText] = useState('');
 
-    const [allCourses, setAllCourses] = useState(props.courses);
-    const [allCoursesCurrent, setAllCoursesCurrent] = useState(allCourses[allCourses.length - 1].id);
-
-    console.log(courses);
+    const [coursesToShow, setCoursesToShow] = useState(props.courses.filter((course) => !userCourses.map(obj => obj.id).includes(course.id)));
+    const [allCoursesCurrent, setAllCoursesCurrent] = useState(coursesToShow.length > 0 ? coursesToShow[0].id : null);
 
     const classes = useStyles();
-
-    const [open, setOpen] = React.useState(false);
-
-    const handleClick = () => setOpen(true);
-
+    const [showMessage, setShowMessage] = React.useState(false);
+    const handleClick = () => setShowMessage(true);
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') return;
-        setOpen(false);
+        setShowMessage(false);
     };
 
-    const handleAddCourse = (event) => {
-        setCourses([...courses, allCourses.find(obj => obj.id === allCoursesCurrent)]);
-        setAllCourses([...allCourses.filter(obj => obj.id !== allCoursesCurrent)]);
-        allCourses.length > 0 && setAllCoursesCurrent(allCourses[allCourses.length - 1].id)
+    const handleAddUserCourse = (event) => {
+        let newUserCourses = [...userCourses, coursesToShow.find(obj => obj.id === allCoursesCurrent)];
+        let newAllCourses = [...coursesToShow.filter(obj => obj.id !== allCoursesCurrent)];
+        newAllCourses.length > 0 && setAllCoursesCurrent(newAllCourses[0].id);
+
+        setUserCourses(newUserCourses);
+        setCoursesToShow(newAllCourses);
+    };
+
+    const handleDeleteUserCourse = (courseToDelete) => {
+        let newUserCourses = userCourses.filter(obj => obj.id !== courseToDelete.id);
+        setUserCourses(newUserCourses);
+        let newCoursesToShow = props.courses.filter((course) => !newUserCourses.map(obj => obj.id).includes(course.id));
+        if (newCoursesToShow.length === 1) setAllCoursesCurrent(newCoursesToShow[0].id);
+        setCoursesToShow(newCoursesToShow)
+
     };
 
     const isEmailValid = () => {
@@ -99,13 +106,12 @@ export default function UserEditForm(props) {
             status: status,
             phone: phone,
             mobile: mobile,
-            courses: courses.map(c => c.id)
+            courses: userCourses.map(c => c.id)
         }).then(success => {
             if (success) {
-                setOpen(true);
+                setShowMessage(true);
                 props.redirectOnSubmit();
-            }
-            else{
+            } else {
                 //todo server failure message.
             }
         });
@@ -119,7 +125,7 @@ export default function UserEditForm(props) {
                 <Snackbar
                     anchorOrigin={{vertical: 'top', horizontal: "center"}}
                     autoHideDuration={3000}
-                    open={open}
+                    open={showMessage}
                     onClose={handleClose}
                 >
                     <Alert onClose={handleClose}>Changes saved successfully</Alert>
@@ -195,35 +201,35 @@ export default function UserEditForm(props) {
                                 <MenuItem value={true}>Active</MenuItem>
                             </TextField>
                         </Grid>
-                        <Grid item container xs={12}>
-                            <Grid item xs={9}>
-                                <TextField
-                                    id="courses"
-                                    label="Courses"
-                                    value={allCoursesCurrent} select fullWidth
-                                    onChange={event => setAllCoursesCurrent(event.target.value)}
-                                >
-                                    {allCourses.filter((item) => !courses.includes(item)).map((c, i) => (
-                                        <MenuItem value={c.id}>{c.name}</MenuItem>
-                                    ))}
-                                </TextField>
+                        {coursesToShow.length > 0 ?
+                            <Grid item container xs={12}>
+                                <Grid item xs={9}>
+                                    <TextField
+                                        id="courses"
+                                        label="Courses"
+                                        value={allCoursesCurrent} select fullWidth
+                                        onChange={event => setAllCoursesCurrent(event.target.value)}
+                                    >
+                                        {coursesToShow.map(course => (
+                                            <MenuItem value={course.id}>{course.name}</MenuItem>
+                                        ))}
+                                    </TextField>
 
-                            </Grid>
-                            <Grid item xs={1}/>
-                            <Grid item>
-                                <Fab
-                                    size={"small"}
-                                    className={classes.addCourse}
-                                    onClick={handleAddCourse}><AddIcon/></Fab>
-                            </Grid>
-                        </Grid>
+                                </Grid>
+                                <Grid item xs={1}/>
+                                <Grid item>
+                                    <Fab
+                                        size={"small"}
+                                        className={classes.addCourse}
+                                        onClick={handleAddUserCourse}><AddIcon/></Fab>
+                                </Grid>
+                            </Grid> : null}
+
                         <Grid item xs={12}>
-                            {courses.map(c => (
+                            {userCourses.map(course => (
                                 <Chip
-                                    label={c.name}
-                                    onDelete={() => {
-                                    }}
-                                    color={"primary"}
+                                    label={course.name}
+                                    onDelete={()=>handleDeleteUserCourse(course)}
                                 />
                             ))}
                         </Grid>
@@ -234,7 +240,7 @@ export default function UserEditForm(props) {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        disabled={open}
+                        disabled={showMessage}
                     >
                         SAVE
                     </Button>
