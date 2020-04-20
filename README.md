@@ -10,7 +10,7 @@ $ cd test_task134/
 
 $ sudo mysql -u [your_user or just 'root'] -p < [path/to/init_db.sql]
 
-######create virtual environment: 
+###### create virtual environment: 
 $ python3 -m venv venv \
 $ source venv/bin/activate \
 $ pip install -r requirements.txt \
