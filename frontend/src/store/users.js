@@ -10,7 +10,7 @@ class UserStore {
     userToEdit = null;
 
     createUser = (userData) => {
-        return fetch("http://10.10.86.217:5000/api/users", {
+        return fetch("http://localhost:5000/api/users", {
             method: "POST",
             headers: {'Content-Type': "application/json"},
             body: JSON.stringify(userData)
@@ -18,13 +18,13 @@ class UserStore {
     };
 
     getUser = (userId) => {
-        fetch("http://10.10.86.217:5000/api/users/" + userId)
+        fetch("http://localhost:5000/api/users/" + userId)
             .then(response => response.json())
             .then(user => this.userToEdit = user)
     };
 
     updateUser = (user) => {
-        return fetch("http://10.10.86.217:5000/api/users/" + user.id,
+        return fetch("http://localhost:5000/api/users/" + user.id,
             {
                 method: "PUT",
                 headers: {'Content-Type': "application/json"},
@@ -33,18 +33,18 @@ class UserStore {
     };
 
     deleteUser = (userId) => {
-        fetch("http://10.10.86.217:5000/api/users/" + userId, {method: "DELETE"})
+        fetch("http://localhost:5000/api/users/" + userId, {method: "DELETE"})
             .then(() => this.getUsers())
     };
 
     getCourses = () => {
-        fetch("http://10.10.86.217:5000/api/courses")
+        fetch("http://localhost:5000/api/courses")
             .then(response => response.json())
             .then(json => this.courses = json)
     };
 
     getUsers = () => {
-        fetch("http://10.10.86.217:5000/api/users")
+        fetch("http://localhost:5000/api/users")
             .then(response => response.json())
             .then(json => this.userList = json)
     };
