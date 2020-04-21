@@ -40,8 +40,8 @@ export default function (props) {
     };
 
     const isNameValid = () => {
-        let isValid = /^[a-zA-Z]{4,20}$/.test(name);
-        setNameErrorText(isValid ? '' : name.length ? 'Please enter a valid name. 4-20 latin letters' : 'This field is required');
+        let isValid = /^[a-zA-Z]{2,15}[ ]?[a-zA-Z]{2,15}$/.test(name);
+        setNameErrorText(isValid ? '' : name.length ? 'Please enter a valid name. at least 4 latin letters' : 'This field is required');
         return isValid;
     };
 
